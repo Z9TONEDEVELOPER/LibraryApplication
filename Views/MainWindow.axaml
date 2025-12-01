@@ -2,8 +2,83 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        xmlns:Models="clr-namespace:LibraryApp.Models"
         x:Class="LibraryApp.Views.MainWindow"
-        Title="LibraryApp">
-    Welcome to Avalonia!
+        Title="Читательский киоск"
+        WindowState="FullScreen"
+        Topmost="True"
+        CanResize="False"
+        ShowInTaskbar="False"
+        Background="#f0e6d2">
+    <Grid>
+    <!-- Заголовок -->
+    <TextBlock Text="ЧИТАТЕЛЬСКИЙ КИОСК • ЦБС"
+               FontSize="28"
+               FontWeight="Bold"
+               Foreground="#333"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Top"
+               Margin="0,20,0,0" />
+
+    <!-- Сетка ресурсов -->
+    <ItemsControl x:Name="ResourceItemsControl"
+                  Margin="60,80,60,120">
+      <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+          <UniformGrid Columns="5" />
+        </ItemsPanelTemplate>
+      </ItemsControl.ItemsPanel>
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="Models:ResourceItem">
+          <Button Content="{Binding Title}"
+                  FontSize="16"
+                  Padding="10"
+                  Margin="8"
+                  Background="White"
+                  BorderBrush="#ccc"
+                  BorderThickness="2"
+                  CornerRadius="8"
+                  HorizontalContentAlignment="Center"
+                  VerticalContentAlignment="Center"
+                  Width="140"
+                  Height="120"
+                  Click="OnResourceClick"
+                  Tag="{Binding Url}" />
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+
+    <!-- Панель программ внизу -->
+    <StackPanel Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Margin="0,0,0,20">
+      <ItemsControl x:Name="ProgramItemsControl">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Horizontal" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="Models:ProgramItem">
+            <Button Content="{Binding Name}"
+                    Width="100"
+                    Height="50"
+                    Margin="5"
+                    Click="OnProgramClick"
+                    Tag="{Binding Path}" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </StackPanel>
+
+    <!-- Секретная область для Dev Mode -->
+    <Border x:Name="DevTrigger"
+            Width="50"
+            Height="50"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Background="Transparent"
+            Cursor="Hand" />
+  </Grid>
 </Window>
