@@ -1,7 +1,7 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-
+using LibraryApp.Views;
 namespace LibraryApp;
 
 public partial class App : Application
