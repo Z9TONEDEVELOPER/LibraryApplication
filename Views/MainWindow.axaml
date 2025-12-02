@@ -9,10 +9,10 @@
         Topmost="True"
         CanResize="False"
         ShowInTaskbar="False"
-        Background="#f0e6d2">
+        Background="#464946ff">
     <Grid>
     <!-- Заголовок -->
-    <TextBlock Text="ЧИТАТЕЛЬСКИЙ КИОСК • ЦБС"
+    <TextBlock Text="ЦЕНТРАЛИЗОВАННАЯ БИБЛИОТЕЧНАЯ СИСТЕМА КИРОВСКОГО РАЙОНА"
                FontSize="28"
                FontWeight="Bold"
                Foreground="#333"
