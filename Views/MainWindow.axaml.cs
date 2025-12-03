@@ -19,16 +19,17 @@ public partial class MainWindow : Window
 {
     private AppConfig _config = new();
     public AppConfig Config => _config;
+    
 
     public MainWindow()
     {
         DataContext = this;
         InitializeComponent();
         LoadConfig();
+        ApplyBackground();
         BindResources();
         BindPrograms();
         ProgramItemsControl.ItemsSource = GetCurrentPrograms();
-        ApplyBackground();
         DevTrigger.PointerPressed += (s, e) => ShowDevInfo();
     }
 
@@ -36,7 +37,6 @@ public partial class MainWindow : Window
     private void LoadConfig()
     {
         var configPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
-
         try
         {
             // Если файла нет — создаём шаблон
@@ -54,6 +54,7 @@ public partial class MainWindow : Window
             if (config != null)
             {
                 _config = config;
+                Console.WriteLine($"[DEBUG] Загружено меню: {_config.Header.MenuItems.Count} пунктов");
                 return;
             }
         }
@@ -97,7 +98,6 @@ public partial class MainWindow : Window
             },
             Header = new Header
             {
-                Title = "САНКТ-ПЕТЕРБУРГСКОЕ ГОСУДАРСТВЕННОЕ БЮДЖЕТНОЕ УЧРЕЖДЕНИЕ КУЛЬТУРЫ \"ЦЕНТРАЛИЗОВАННАЯ БИБЛИОТЕЧНАЯ СИСТЕМА КИРОВСКОГО РАЙОНА\"",
                 MenuItems = new List<HeaderItem>
                 {
                     new() { Name = "О ЦБС", Url = "https://kircbs.ru/about" },
@@ -263,6 +263,23 @@ public partial class MainWindow : Window
             // Запасной фон, если что-то пошло не так
             this.Background = new SolidColorBrush(Color.FromRgb(248, 244, 237)); // #282724ff
             System.Diagnostics.Debug.WriteLine($"[Warning] Не удалось загрузить фон: {ex.Message}");
+        }
+    }
+    private async void OnHeaderItemClick(object sender, RoutedEventArgs e)
+    {
+        if (sender is Button btn && btn.Tag is string url && !string.IsNullOrWhiteSpace(url))
+        {
+            try
+            {
+                await Launcher.LaunchUriAsync(new Uri(url.Trim())); // ← trim() на всякий случай
+            }
+            catch (Exception ex)
+            {
+                await MessageBoxManager.GetMessageBoxStandard(
+                    "Ошибка", 
+                    $"Не удалось открыть: {ex.Message}"
+                ).ShowAsync();
+            }
         }
     }
     private void ShowDevInfo()

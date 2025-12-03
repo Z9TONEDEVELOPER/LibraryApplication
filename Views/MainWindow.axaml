@@ -30,33 +30,31 @@
             VerticalAlignment="Top"  />
 
     <!-- Меню-ссылки под баннером -->
-    <WrapPanel Grid.Row="1"
-               HorizontalAlignment="Center"
-               Margin="0,8,0,12">
-      <ItemsControl ItemsSource="{Binding Config.Header.MenuItems}">
-        <ItemsControl.ItemsPanel>
-          <ItemsPanelTemplate>
-            <StackPanel Orientation="Horizontal" Spacing="16" />
-          </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate>
-          <DataTemplate x:DataType="Models:HeaderItem">
-            <HyperlinkButton Content="{Binding Name}"
-                        NavigateUri="{Binding Url}"
-                        Foreground="White"
-                        FontWeight="Bold"
-                        FontSize="14"
-                        Background="#4CAF50" 
-                        Padding="8,4"
-                        Cursor="Hand"
-                        BorderBrush="White"
-                        BorderThickness="1"
-                        CornerRadius="4" />
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
-    </WrapPanel>
-
+    <ItemsControl Grid.Row="1"
+              ItemsSource="{Binding Config.Header.MenuItems}"
+              HorizontalAlignment="Center"
+              Margin="0,8,0,12">
+    <ItemsControl.ItemsPanel>
+        <ItemsPanelTemplate>
+        <WrapPanel Orientation="Horizontal" />
+        </ItemsPanelTemplate>
+    </ItemsControl.ItemsPanel>
+    <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="Models:HeaderItem">
+        <Button Content="{Binding Name}"
+                Click="OnHeaderItemClick"
+                Tag="{Binding Url}"
+                Background="#4CAF50"
+                Foreground="White"
+                Padding="16,8"
+                Margin="12,6"
+                CornerRadius="8"
+                FontSize="16"
+                FontWeight="SemiBold"
+                MinWidth="120" />
+        </DataTemplate>
+    </ItemsControl.ItemTemplate>
+    </ItemsControl>
     <!-- Сетка ресурсов -->
     <ItemsControl x:Name="ResourceItemsControl"
                   Grid.Row="2"
