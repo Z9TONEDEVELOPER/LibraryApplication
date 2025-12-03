@@ -3,26 +3,64 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Models="clr-namespace:LibraryApp.Models"
+        xmlns:Views="clr-namespace:LibraryApp.Views"
+        x:DataType="Views:MainWindow"
         x:Class="LibraryApp.Views.MainWindow"
+        x:Name="MainWindowRoot"
         Title="Читательский киоск"
         WindowState="FullScreen"
         Topmost="True"
         CanResize="False"
         ShowInTaskbar="False"
-        Background="#464946ff">
+        >
     <Grid>
-    <!-- Заголовок -->
-    <TextBlock Text="ЦЕНТРАЛИЗОВАННАЯ БИБЛИОТЕЧНАЯ СИСТЕМА КИРОВСКОГО РАЙОНА"
-               FontSize="28"
-               FontWeight="Bold"
-               Foreground="#333"
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />   <!-- Header -->
+      <RowDefinition Height="Auto" />   <!-- Меню-ссылки -->
+      <RowDefinition Height="*" />      <!-- Ресурсы -->
+      <RowDefinition Height="Auto" />   <!-- Программы -->
+    </Grid.RowDefinitions>
+
+    <!-- Header: баннер ЦБС -->
+    <Image Source="avares://LibraryApp/Assets/Background/cbs_header.png"
+           Grid.Row="0"
+            Height="120"
+            Stretch="Uniform"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Top"  />
+
+    <!-- Меню-ссылки под баннером -->
+    <WrapPanel Grid.Row="1"
                HorizontalAlignment="Center"
-               VerticalAlignment="Top"
-               Margin="0,20,0,0" />
+               Margin="0,8,0,12">
+      <ItemsControl ItemsSource="{Binding Config.Header.MenuItems}">
+        <ItemsControl.ItemsPanel>
+          <ItemsPanelTemplate>
+            <StackPanel Orientation="Horizontal" Spacing="16" />
+          </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+          <DataTemplate x:DataType="Models:HeaderItem">
+            <HyperlinkButton Content="{Binding Name}"
+                        NavigateUri="{Binding Url}"
+                        Foreground="White"
+                        FontWeight="Bold"
+                        FontSize="14"
+                        Background="#4CAF50" 
+                        Padding="8,4"
+                        Cursor="Hand"
+                        BorderBrush="White"
+                        BorderThickness="1"
+                        CornerRadius="4" />
+          </DataTemplate>
+        </ItemsControl.ItemTemplate>
+      </ItemsControl>
+    </WrapPanel>
 
     <!-- Сетка ресурсов -->
     <ItemsControl x:Name="ResourceItemsControl"
-                  Margin="60,80,60,120">
+                  Grid.Row="2"
+                  Margin="60,20,60,20">
       <ItemsControl.ItemsPanel>
         <ItemsPanelTemplate>
           <UniformGrid Columns="5" />
@@ -49,9 +87,9 @@
     </ItemsControl>
 
     <!-- Панель программ внизу -->
-    <StackPanel Orientation="Horizontal"
+    <StackPanel Grid.Row="3"
+                Orientation="Horizontal"
                 HorizontalAlignment="Center"
-                VerticalAlignment="Bottom"
                 Margin="0,0,0,20">
       <ItemsControl x:Name="ProgramItemsControl">
         <ItemsControl.ItemsPanel>
@@ -74,6 +112,7 @@
 
     <!-- Секретная область для Dev Mode -->
     <Border x:Name="DevTrigger"
+            Grid.RowSpan="4"
             Width="50"
             Height="50"
             HorizontalAlignment="Right"
