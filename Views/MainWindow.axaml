@@ -1,7 +1,5 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:Models="clr-namespace:LibraryApp.Models"
         xmlns:Views="clr-namespace:LibraryApp.Views"
         x:DataType="Views:MainWindow"
@@ -11,111 +9,88 @@
         WindowState="FullScreen"
         Topmost="True"
         CanResize="False"
-        ShowInTaskbar="False"
-        >
-    <Grid>
+        ShowInTaskbar="False">
+
+  <Grid>
     <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />   <!-- Header -->
-      <RowDefinition Height="Auto" />   <!-- Меню-ссылки -->
-      <RowDefinition Height="*" />      <!-- Ресурсы -->
-      <RowDefinition Height="Auto" />   <!-- Программы -->
+      <RowDefinition Height="120" /> <!-- Header -->
+      <RowDefinition Height="*" />   <!-- Основной контент -->
     </Grid.RowDefinitions>
 
-    <!-- Header: баннер ЦБС -->
-    <Image Source="avares://LibraryApp/Assets/Background/cbs_header.png"
-           Grid.Row="0"
-            Height="120"
-            Stretch="Uniform"
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Top"  />
+    <!-- === Header (баннер + невидимая кнопка) === -->
+    <Grid Grid.Row="0">
+      <!-- Фон header -->
+      <Image Source="avares://LibraryApp/Assets/Background/cbs_header.png"
+             Stretch="Uniform"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch" />
 
-    <!-- Меню-ссылки под баннером -->
-    <ItemsControl Grid.Row="1"
-              ItemsSource="{Binding Config.Header.MenuItems}"
-              HorizontalAlignment="Center"
-              Margin="0,8,0,12">
-    <ItemsControl.ItemsPanel>
-        <ItemsPanelTemplate>
-        <WrapPanel Orientation="Horizontal" />
-        </ItemsPanelTemplate>
-    </ItemsControl.ItemsPanel>
-    <ItemsControl.ItemTemplate>
-        <DataTemplate x:DataType="Models:HeaderItem">
-        <Button Content="{Binding Name}"
-                Click="OnHeaderItemClick"
-                Tag="{Binding Url}"
-                Background="#4CAF50"
-                Foreground="White"
-                Padding="16,8"
-                Margin="12,6"
-                CornerRadius="8"
-                FontSize="16"
-                FontWeight="SemiBold"
-                MinWidth="120" />
-        </DataTemplate>
-    </ItemsControl.ItemTemplate>
-    </ItemsControl>
-    <!-- Сетка ресурсов -->
-    <ItemsControl x:Name="ResourceItemsControl"
-                  Grid.Row="2"
-                  Margin="60,20,60,20">
-      <ItemsControl.ItemsPanel>
-        <ItemsPanelTemplate>
-          <UniformGrid Columns="5" />
-        </ItemsPanelTemplate>
-      </ItemsControl.ItemsPanel>
-      <ItemsControl.ItemTemplate>
-        <DataTemplate x:DataType="Models:ResourceItem">
-          <Button Content="{Binding Title}"
-                  FontSize="16"
-                  Padding="10"
-                  Margin="8"
-                  Background="White"
-                  BorderBrush="#ccc"
-                  BorderThickness="2"
-                  CornerRadius="8"
-                  HorizontalContentAlignment="Center"
-                  VerticalContentAlignment="Center"
-                  Width="140"
-                  Height="120"
-                  Click="OnResourceClick"
-                  Tag="{Binding Url}" />
-        </DataTemplate>
-      </ItemsControl.ItemTemplate>
-    </ItemsControl>
+      <!-- Невидимая кнопка на весь header -->
+      <Button x:Name="CbsButton"
+              Background="Transparent"
+              BorderThickness="0"
+              Click="OpenCbsSite"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch"
+              Cursor="Hand" />
 
-    <!-- Панель программ внизу -->
-    <StackPanel Grid.Row="3"
-                Orientation="Horizontal"
-                HorizontalAlignment="Center"
-                Margin="0,0,0,20">
-      <ItemsControl x:Name="ProgramItemsControl">
-        <ItemsControl.ItemsPanel>
-          <ItemsPanelTemplate>
-            <StackPanel Orientation="Horizontal" />
-          </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate>
-          <DataTemplate x:DataType="Models:ProgramItem">
-            <Button Content="{Binding Name}"
-                    Width="100"
-                    Height="50"
-                    Margin="5"
-                    Click="OnProgramClick"
-                    Tag="{Binding Path}" />
-          </DataTemplate>
-        </ItemsControl.ItemTemplate>
-      </ItemsControl>
-    </StackPanel>
+      <!-- Кнопка меню (бургер) -->
+      <Button x:Name="MenuButton"
+              Content="☰"
+              FontSize="24"
+              Foreground="White"
+              Background="Transparent"
+              BorderThickness="0"
+              HorizontalAlignment="Left"
+              VerticalAlignment="Top"
+              Margin="20,15,0,0"
+              Click="ToggleSidebar" />
+    </Grid>
 
-    <!-- Секретная область для Dev Mode -->
-    <Border x:Name="DevTrigger"
-            Grid.RowSpan="4"
-            Width="50"
-            Height="50"
-            HorizontalAlignment="Right"
+    <!-- === Основной контент (пока пустой) === -->
+    <Border x:Name="MainContent" Grid.Row="1" />
+
+    <!-- === Боковая панель (изначально скрыта) === -->
+    <Border x:Name="Sidebar"
+            Width="280"
+            HorizontalAlignment="Left"
             VerticalAlignment="Top"
-            Background="Transparent"
-            Cursor="Hand" />
+            Background="#f0f0f0"
+            IsVisible="False"
+            Margin="0,0,0,0"
+            ZIndex="50">
+      <StackPanel Spacing="12" Margin="20,20,20,0">
+        <TextBlock Text="Меню" FontSize="20" FontWeight="Bold" Foreground="#333" />
+        <Separator />
+
+        <Button Content="Ресурсы"
+                FontSize="18"
+                Background="Transparent"
+                BorderThickness="0"
+                Foreground="#333"
+                HorizontalAlignment="Stretch"
+                Click="ShowResources" />
+
+        <Button Content="Программы"
+                FontSize="18"
+                Background="Transparent"
+                BorderThickness="0"
+                Foreground="#333"
+                HorizontalAlignment="Stretch"
+                Click="ShowPrograms" />
+
+        <Separator />
+
+        <Button Content="Назад"
+                FontSize="16"
+                Background="#e0e0e0"
+                BorderBrush="#ccc"
+                BorderThickness="1"
+                CornerRadius="4"
+                Foreground="#333"
+                HorizontalAlignment="Stretch"
+                Click="HideSidebar" />
+      </StackPanel>
+    </Border>
   </Grid>
 </Window>
