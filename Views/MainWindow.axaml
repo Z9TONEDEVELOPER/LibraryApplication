@@ -10,22 +10,23 @@
         Topmost="True"
         CanResize="False"
         ShowInTaskbar="False">
-
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="120" /> <!-- Header -->
       <RowDefinition Height="*" />   <!-- Основной контент -->
     </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+        <ColumnDefinition Width="{Binding SidebarWidth}" MinWidth="0" MaxWidth="200" />
+        <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
 
-    <!-- === Header (баннер + невидимая кнопка) === -->
-    <Grid Grid.Row="0">
-      <!-- Фон header -->
+    <!-- === Header (занимает обе колонки) === -->
+    <Grid Grid.Row="0" Grid.ColumnSpan="2">
       <Image Source="avares://LibraryApp/Assets/Background/cbs_header.png"
-             Stretch="Uniform"
-             HorizontalAlignment="Stretch"
-             VerticalAlignment="Stretch" />
+             Stretch="None"
+             HorizontalAlignment="Left"
+             VerticalAlignment="Top" />
 
-      <!-- Невидимая кнопка на весь header -->
       <Button x:Name="CbsButton"
               Background="Transparent"
               BorderThickness="0"
@@ -34,7 +35,6 @@
               VerticalAlignment="Stretch"
               Cursor="Hand" />
 
-      <!-- Кнопка меню (бургер) -->
       <Button x:Name="MenuButton"
               Content="☰"
               FontSize="24"
@@ -47,24 +47,21 @@
               Click="ToggleSidebar" />
     </Grid>
 
-    <!-- === Основной контент (пока пустой) === -->
-    <Border x:Name="MainContent" Grid.Row="1" />
-
-    <!-- === Боковая панель (изначально скрыта) === -->
+    <!-- === Боковая панель (в первой колонке) === -->
     <Border x:Name="Sidebar"
-            Width="280"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Top"
-            Background="#f0f0f0"
-            IsVisible="False"
-            Margin="0,0,0,0"
-            ZIndex="50">
-      <StackPanel Spacing="12" Margin="20,20,20,0">
-        <TextBlock Text="Меню" FontSize="20" FontWeight="Bold" Foreground="#333" />
-        <Separator />
+        Grid.Row="1"
+        Grid.Column="0"
+        Background="#f8f4ed"
+        IsVisible="False"
+        CornerRadius="0,12,12,0"
+        BorderThickness="0,0,1,0"
+        BorderBrush="#e0e0e0">
+    <StackPanel Spacing="6" Margin="16,20,16,16">
+        <TextBlock Text="Меню" FontSize="18" FontWeight="SemiBold" Foreground="#333" />
+        <Separator Margin="0,4,0,10" />
 
         <Button Content="Ресурсы"
-                FontSize="18"
+                FontSize="16"
                 Background="Transparent"
                 BorderThickness="0"
                 Foreground="#333"
@@ -72,17 +69,25 @@
                 Click="ShowResources" />
 
         <Button Content="Программы"
-                FontSize="18"
+                FontSize="16"
                 Background="Transparent"
                 BorderThickness="0"
                 Foreground="#333"
                 HorizontalAlignment="Stretch"
                 Click="ShowPrograms" />
 
-        <Separator />
+        <Separator Margin="0,10,0,4" />
+
+        <Button Content="Dev Mode"
+                FontSize="14"
+                Background="Transparent"
+                BorderThickness="0"
+                Foreground="#666"
+                HorizontalAlignment="Stretch"
+                Click="ShowDevMode" />
 
         <Button Content="Назад"
-                FontSize="16"
+                FontSize="14"
                 Background="#e0e0e0"
                 BorderBrush="#ccc"
                 BorderThickness="1"
@@ -90,7 +95,14 @@
                 Foreground="#333"
                 HorizontalAlignment="Stretch"
                 Click="HideSidebar" />
-      </StackPanel>
+    </StackPanel>
+    </Border>
+
+    <!-- === Основной контент (во второй колонке) === -->
+    <Border x:Name="MainContent"
+            Grid.Row="1"
+            Grid.Column="1"
+            Opacity="0.95" >
     </Border>
   </Grid>
 </Window>

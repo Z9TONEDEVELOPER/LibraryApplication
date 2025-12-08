@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.IO;
+using System.ComponentModel;
 using System.Text.Json;
 using Avalonia.Controls;
 using Avalonia.Input;
@@ -13,14 +14,32 @@ using System.Linq;
 using Avalonia.Interactivity;
 using MsBox.Avalonia;
 using System.Text;
-using System.Diagnostics;
+using Avalonia.Data.Converters;  
+using System.Globalization;       
+
 
 namespace LibraryApp.Views;
 
-public partial class MainWindow : Window
+public partial class MainWindow : Window, INotifyPropertyChanged
 {
     private AppConfig _config = new();
     public AppConfig Config => _config;
+    public event PropertyChangedEventHandler? PropertyChanged;
+    private bool _isSidebarOpen = false;
+    private void OnPropertyChanged(string propertyName)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+    private double _sidebarWidth = 0;
+    public double SidebarWidth
+    {
+        get => _sidebarWidth;
+        set
+        {
+            _sidebarWidth = value;
+            OnPropertyChanged(nameof(SidebarWidth));
+        }
+    }
 
     public MainWindow()
     {
@@ -28,6 +47,7 @@ public partial class MainWindow : Window
         InitializeComponent();
         LoadConfig();
         ApplyBackground();
+        
     }
 
     private void LoadConfig()
@@ -149,11 +169,19 @@ public partial class MainWindow : Window
 
     private void ToggleSidebar(object sender, RoutedEventArgs e)
     {
-        Sidebar.IsVisible = !Sidebar.IsVisible;
+        SidebarWidth = SidebarWidth == 0 ? 200 : 0;
+        Sidebar.IsVisible = SidebarWidth > 0;
     }
 
     private void HideSidebar(object sender, RoutedEventArgs e)
     {
+        SidebarWidth = 0;
+        Sidebar.IsVisible = false;
+    }
+    private void ShowDevMode(object sender, RoutedEventArgs e)
+    {
+        // Пока просто выводим сообщение
+        Console.WriteLine("[DEBUG] Открыт Dev Mode");
         Sidebar.IsVisible = false;
     }
 
