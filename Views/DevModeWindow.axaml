@@ -1,0 +1,64 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="LibraryApp.Views.DevModeWindow"
+        Title="Dev Mode"
+        Width="500"
+        Height="400"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False">
+  <Grid Margin="20">
+    <Grid.RowDefinitions>
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" /> 
+      <RowDefinition Height="*" />
+      <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+
+    <TextBlock Text="Режим разработчика"
+               FontSize="20"
+               FontWeight="Bold"
+               Grid.Row="0"
+               Margin="0,0,0,20" />
+
+    <TextBlock x:Name="InfoText"
+               Grid.Row="1"
+               TextWrapping="Wrap"
+               FontFamily="Consolas"
+               Background="#f0f0f0"
+               Padding="10"
+               Margin="0,0,0,20" />
+
+    <Button Content="Переключить режим (Adults/Kids)"
+            Grid.Row="2"
+            Click="ToggleMode"
+            Margin="0,0,0,10" />
+
+    <Button Content="Обновить фон"
+            Grid.Row="3"
+            Click="RefreshBackground"
+            Margin="0,0,0,10" />
+
+    <Button Content="Перезапустить приложение"
+            Grid.Row="4"
+            Click="RestartApp"
+            Background="#ff6b6b"
+            Foreground="White"
+            Margin="0,0,0,20" />
+
+    <Button Content="Закрыть"
+            Grid.Row="6"
+            Click="CloseWindow"
+            HorizontalAlignment="Right"
+            Width="100" />
+    <Button Content="Закрыть приложение"
+        Grid.Row="5"
+        Click="CloseApplication"
+        Background="#ff4757"
+        Foreground="White"
+        Margin="0,0,0,20" />
+  </Grid>
+</Window>

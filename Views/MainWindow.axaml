@@ -6,14 +6,14 @@
         x:Class="LibraryApp.Views.MainWindow"
         x:Name="MainWindowRoot"
         Title="Читательский киоск"
-        WindowState="FullScreen"
-        Topmost="True"
+        Topmost="False"
         CanResize="False"
-        ShowInTaskbar="False">
+        ShowInTaskbar="True"
+        WindowStartupLocation="CenterScreen">
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="120" /> <!-- Header -->
-      <RowDefinition Height="*" />   <!-- Основной контент -->
+      <RowDefinition Height="*" /><!-- Основной контент -->
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
         <ColumnDefinition Width="{Binding SidebarWidth}" MinWidth="0" MaxWidth="200" />
@@ -22,10 +22,11 @@
 
     <!-- === Header (занимает обе колонки) === -->
     <Grid Grid.Row="0" Grid.ColumnSpan="2">
-      <Image Source="avares://LibraryApp/Assets/Background/cbs_header.png"
-             Stretch="None"
-             HorizontalAlignment="Left"
-             VerticalAlignment="Top" />
+      
+        <Border x:Name="HeaderContainer"
+                Grid.Row="0"
+                Grid.ColumnSpan="2"
+                Height="120" />
 
       <Button x:Name="CbsButton"
               Background="Transparent"

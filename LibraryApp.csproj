@@ -24,4 +24,13 @@
   <ItemGroup>
     <AvaloniaResource Include="Assets/**" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets/**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Models\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Models\**" />
+  </ItemGroup>
 </Project>

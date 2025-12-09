@@ -7,22 +7,26 @@
     <Separator Margin="0,4,0,10" />
 
     <ItemsControl x:Name="ProgramsList" Margin="0,0,0,10">
-      <ItemsControl.ItemTemplate>
-        <DataTemplate x:DataType="Models:ProgramItem">
-          <Button Content="{Binding Name}"
-                  FontSize="14"
-                  Background="White"
-                  BorderBrush="#ccc"
-                  BorderThickness="1"
-                  CornerRadius="6"
-                  HorizontalContentAlignment="Left"
-                  Padding="12,8"
-                  Click="OnProgramClick"
-                  Tag="{Binding Path}"
-                  Margin="0,4" />
-        </DataTemplate>
-      </ItemsControl.ItemTemplate>
-    </ItemsControl>
+    <ItemsControl.ItemTemplate>
+      <DataTemplate x:DataType="Models:ProgramItem">
+        <Button FontSize="14"
+                Background="Gray"
+                BorderBrush="#ccc"
+                BorderThickness="1"
+                CornerRadius="6"
+                HorizontalContentAlignment="Stretch"
+                Padding="12,8"
+                Click="OnProgramClick"
+                Tag="{Binding Path}"
+                Margin="0,4">
+          <StackPanel Orientation="Horizontal" Spacing="10">
+            <Image Source="{Binding IconPath}" /> <!--Блок для иконок сайтов дальнейшая доработка в mvp входить не будет-->
+            <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+          </StackPanel>
+        </Button>
+      </DataTemplate>
+    </ItemsControl.ItemTemplate>
+  </ItemsControl>
 
     <Button Content="← Назад"
             FontSize="14"

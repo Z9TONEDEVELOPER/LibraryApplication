@@ -5,8 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System;
-using System.Threading.Tasks;
-using Avalonia;
+
 namespace LibraryApp.Views;
 
 public partial class MenuProgramsView : UserControl
@@ -28,8 +27,9 @@ public partial class MenuProgramsView : UserControl
         {
             try
             {
-                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                if (OperatingSystem.IsMacOS())
                 {
+                    // Для macOS используем /bin/bash для выполнения команд
                     Process.Start(new ProcessStartInfo
                     {
                         FileName = "/bin/bash",
@@ -40,11 +40,14 @@ public partial class MenuProgramsView : UserControl
                 }
                 else
                 {
+                    // Для Windows и Linux
                     Process.Start(rawPath);
                 }
-                _mainWindow.HideSidebar(null, null); // Используем новый public метод
             }
-            catch { /* игнор */}
+            catch 
+            {
+                // Можно добавить MessageBox, но для MVP оставим без ошибок
+            }
         }
     }
 

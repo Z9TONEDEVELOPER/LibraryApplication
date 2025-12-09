@@ -14,23 +14,20 @@ using System.Linq;
 using Avalonia.Interactivity;
 using MsBox.Avalonia;
 using System.Text;
-using Avalonia.Data.Converters;  
-using System.Globalization;       
-
 
 namespace LibraryApp.Views;
 
 public partial class MainWindow : Window, INotifyPropertyChanged
 {
-    private AppConfig _config = new();
+    public AppConfig _config = new();
     public AppConfig Config => _config;
     public new event PropertyChangedEventHandler? PropertyChanged;
-    private bool _isSidebarOpen = false;
-    private object? _currentSidebarView;
+
     private void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+
     private double _sidebarWidth = 0;
     public double SidebarWidth
     {
@@ -44,13 +41,33 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
     public MainWindow()
     {
+        this.WindowState = WindowState.Maximized;
         DataContext = this;
         InitializeComponent();
         LoadConfig();
         ApplyBackground();
-        
+        this.KeyDown += OnKeyDown;
+        this.Closing += OnWindowClosing;
+        this.ExtendClientAreaToDecorationsHint = false;
+        this.SystemDecorations = SystemDecorations.None;
+        this.ExtendClientAreaToDecorationsHint = true;
     }
-
+    private void OnWindowClosing(object? sender, WindowClosingEventArgs e)
+    {
+        // Отменяем стандартное закрытие
+        e.Cancel = true;
+        
+        // Но если нужно — можно добавить условие для Dev Mode:
+        if (_config.AppSettings.EnableDevMode) return;
+    }
+    private void OnKeyDown(object sender, KeyEventArgs e)
+    {
+        // Проверяем Ctrl+F12
+        if (e.Key == Key.F12 && e.KeyModifiers == KeyModifiers.Control)
+        {
+            ShowDevModeWindow();
+        }
+    }
     private void LoadConfig()
     {
         var configPath = Path.Combine(AppContext.BaseDirectory, "appsettings.json");
@@ -95,46 +112,48 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             },
             Resources = new List<ResourceItem>
             {
-                new() { Category = "Adults", Title = "Сайт ЦБС", Url = "https://kircbs.ru/" },
-                new() { Category = "Adults", Title = "Литрес", Url = "http://biblio.litres.ru/" },
-                new() { Category = "Adults", Title = "ИВИС", Url = "https://eivis.ru/" },
-                new() { Category = "Adults", Title = "Университетская библиотека", Url = "http://www.biblioclub.ru/" },
-                new() { Category = "Adults", Title = "Гребенникон", Url = "http://demo.grebennikon.ru" },
-                new() { Category = "Adults", Title = "БиблиоРоссика", Url = "http://www.bibliorossica.com/" },
-                new() { Category = "Adults", Title = "АртПортал", Url = "https://art.biblioclub.ru/" },
-                new() { Category = "Adults", Title = "Интегрум", Url = "https://www.integrum.ru/" },
-                new() { Category = "Adults", Title = "КСОБ", Url = "https://spblib.ru/" },
+                // === Взрослые ресурсы ===
+                new() { Category = "Adults", Title = "Сайт ЦБС", Url = "https://kircbs.ru/", Icon = "cbs" },
+                new() { Category = "Adults", Title = "Литрес", Url = "http://biblio.litres.ru/", Icon = "litres" },
+                new() { Category = "Adults", Title = "ИВИС", Url = "https://eivis.ru/", Icon = "ivis" },
+                new() { Category = "Adults", Title = "Университетская библиотека", Url = "http://www.biblioclub.ru/", Icon = "biblioclub" },
+                new() { Category = "Adults", Title = "Гребенникон", Url = "http://demo.grebennikon.ru", Icon = "grebennikon" },
+                new() { Category = "Adults", Title = "БиблиоРоссика", Url = "http://www.bibliorossica.com/", Icon = "bibliorossica" },
+                new() { Category = "Adults", Title = "АртПортал", Url = "https://art.biblioclub.ru/", Icon = "artportal" },
+                new() { Category = "Adults", Title = "Интегрум", Url = "https://www.integrum.ru/", Icon = "integrum" },
+                new() { Category = "Adults", Title = "КСОБ", Url = "https://spblib.ru/", Icon = "ksub" },
 
-                new() { Category = "Kids", Title = "Сайт ЦБС", Url = "https://kircbs.ru/" },
-                new() { Category = "Kids", Title = "КСОБ", Url = "https://spblib.ru/" },
-                new() { Category = "Kids", Title = "Пушкинская библиотека", Url = "https://www.pushkinlib.spb.ru/" },
-                new() { Category = "Kids", Title = "АртПортал", Url = "https://art.biblioclub.ru/" }
+                // === Детские ресурсы ===
+                new() { Category = "Kids", Title = "Сайт ЦБС", Url = "https://kircbs.ru/", Icon = "cbs" },
+                new() { Category = "Kids", Title = "КСОБ", Url = "https://spblib.ru/", Icon = "ksub" },
+                new() { Category = "Kids", Title = "Пушкинская библиотека", Url = "https://www.pushkinlib.spb.ru/", Icon = "pushkin" },
+                new() { Category = "Kids", Title = "АртПортал", Url = "https://art.biblioclub.ru/", Icon = "artportal" }
             },
             AllowedPrograms = new Dictionary<string, List<ProgramItem>>
             {
                 ["Windows"] = new List<ProgramItem>
                 {
-                    new() { Name = "АРМ Читатель", Path = @"C:\Program Files (x86)\ARM_Reader\ARMReader.exe" },
-                    new() { Name = "Компьютер", Path = "explorer.exe" },
-                    new() { Name = "Блокнот", Path = "notepad.exe" }
+                    new() { Name = "АРМ Читатель", Path = @"C:\Program Files (x86)\ARM_Reader\ARMReader.exe", Icon = "arm_reader" },
+                    new() { Name = "Компьютер", Path = "explorer.exe", Icon = "explorer" },
+                    new() { Name = "Блокнот", Path = "notepad.exe", Icon = "notepad" }
                 },
                 ["Linux"] = new List<ProgramItem>
                 {
-                    new() { Name = "АРМ Читатель", Path = "/opt/arm-reader/ArmReader" },
-                    new() { Name = "Файлы", Path = "xdg-open" },
-                    new() { Name = "Текст", Path = "gedit" }
+                    new() { Name = "АРМ Читатель", Path = "/opt/arm-reader/ArmReader", Icon = "arm_reader" },
+                    new() { Name = "Файлы", Path = "xdg-open", Icon = "explorer" },
+                    new() { Name = "Текст", Path = "gedit", Icon = "notepad" }
                 },
                 ["macOS"] = new List<ProgramItem>
                 {
-                    new() { Name = "Finder", Path = "open" },
-                    new() { Name = "TextEdit", Path = "open -a TextEdit" },
-                    new() { Name = "Safari", Path = "open -a Safari" }
+                    new() { Name = "Finder", Path = "open .", Icon = "explorer" },
+                    new() { Name = "TextEdit", Path = "open -a TextEdit", Icon = "notepad" },
+                    new() { Name = "Safari", Path = "open -a Safari", Icon = "safari" }
                 }
             }
         };
     }
 
-    private void ApplyBackground()
+    public void ApplyBackground()
     {
         string bgFileName = _config.AppSettings.CurrentMode == "Kids"
             ? _config.AppSettings.MainBackgroundKids
@@ -142,19 +161,44 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
         try
         {
-            var uri = new Uri($"avares://LibraryApp/Assets/Background/{bgFileName}");
-            using var stream = AssetLoader.Open(uri);
-            var bitmap = new Bitmap(stream);
+            // Путь к файлу: рядом с .exe / Assets / Background / файл.png
+            string bgPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Background", bgFileName);
+            
+            if (!File.Exists(bgPath))
+            {
+                Console.WriteLine($"[WARN] Фон не найден: {bgPath}");
+                return;
+            }
+
+            var bitmap = new Bitmap(bgPath);
             this.Background = new ImageBrush { Source = bitmap, Stretch = Stretch.UniformToFill };
         }
         catch (Exception ex)
         {
             this.Background = new SolidColorBrush(Color.FromRgb(248, 244, 237));
-            Console.WriteLine($"[Warning] Не удалось загрузить фон: {ex.Message}");
+            Console.WriteLine($"[ERROR] Не удалось загрузить фон: {ex.Message}");
+        }
+        try
+        {
+            string headerPath = Path.Combine(AppContext.BaseDirectory, "Assets", "Background", "cbs_header.png");
+            if (File.Exists(headerPath))
+            {
+                var headerBitmap = new Bitmap(headerPath);
+                var headerImage = new Image
+                {
+                    Source = headerBitmap,
+                    Stretch = Stretch.None,
+                    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
+                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top
+                };
+                HeaderContainer.Child = headerImage;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[WARN] Не удалось загрузить header: {ex.Message}");
         }
     }
-
-    // === НОВЫЕ ОБРАБОТЧИКИ ===
 
     private async void OpenCbsSite(object sender, RoutedEventArgs e)
     {
@@ -207,6 +251,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
         return new List<ProgramItem>();
     }
+
     private void ToggleSidebar(object sender, RoutedEventArgs e)
     {
         SidebarWidth = SidebarWidth == 0 ? 280 : 0;
@@ -214,24 +259,26 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         
         if (Sidebar.IsVisible && SidebarContent.Content == null)
         {
-            ShowMainMenu(); // При первом открытии — главное меню
+            ShowMainMenu();
         }
     }
 
-    private void ShowMainMenuButtonClick(object sender, RoutedEventArgs e) => ShowMainMenu();
-
     public void HideSidebar(object sender, RoutedEventArgs e)
     {
-        SidebarWidth = 0;
         Sidebar.IsVisible = false;
+        SidebarWidth = 0;
     }
 
     public void ShowDevMode(object sender, RoutedEventArgs e)
     {
-        // Пока просто показываем информацию
         MessageBoxManager.GetMessageBoxStandard(
             "Dev Mode",
             $"Режим: {_config.AppSettings.CurrentMode}\nВерсия: 1.0"
         ).ShowAsync();
+    }
+    private void ShowDevModeWindow()
+    {
+        var devWindow = new DevModeWindow(this);
+        devWindow.ShowDialog(this);
     }
 }

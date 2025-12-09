@@ -23,14 +23,6 @@
 
     <Separator Margin="0,10,0,4" />
 
-    <Button Content="Dev Mode"
-            FontSize="14"
-            Background="Transparent"
-            BorderThickness="0"
-            Foreground="#666"
-            HorizontalAlignment="Stretch"
-            Click="OnShowDevMode" />
-
     <Button Content="Назад"
             FontSize="14"
             Background="#e0e0e0"
