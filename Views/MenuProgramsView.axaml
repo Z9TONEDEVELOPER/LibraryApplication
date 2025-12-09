@@ -1,0 +1,37 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Models="clr-namespace:LibraryApp.Models"
+             x:Class="LibraryApp.Views.MenuProgramsView">
+  <StackPanel Margin="16,20,16,16">
+    <TextBlock Text="Программы" FontSize="18" FontWeight="SemiBold" Foreground="#333" />
+    <Separator Margin="0,4,0,10" />
+
+    <ItemsControl x:Name="ProgramsList" Margin="0,0,0,10">
+      <ItemsControl.ItemTemplate>
+        <DataTemplate x:DataType="Models:ProgramItem">
+          <Button Content="{Binding Name}"
+                  FontSize="14"
+                  Background="White"
+                  BorderBrush="#ccc"
+                  BorderThickness="1"
+                  CornerRadius="6"
+                  HorizontalContentAlignment="Left"
+                  Padding="12,8"
+                  Click="OnProgramClick"
+                  Tag="{Binding Path}"
+                  Margin="0,4" />
+        </DataTemplate>
+      </ItemsControl.ItemTemplate>
+    </ItemsControl>
+
+    <Button Content="← Назад"
+            FontSize="14"
+            Background="#f0f0f0"
+            BorderBrush="#ccc"
+            BorderThickness="1"
+            CornerRadius="4"
+            Foreground="#333"
+            HorizontalAlignment="Stretch"
+            Click="OnGoBack" />
+  </StackPanel>
+</UserControl>

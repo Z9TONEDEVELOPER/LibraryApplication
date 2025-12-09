@@ -47,55 +47,19 @@
               Click="ToggleSidebar" />
     </Grid>
 
-    <!-- === Боковая панель (в первой колонке) === -->
+    
+    <!-- === Боковая панель (динамический контент) === -->
     <Border x:Name="Sidebar"
-        Grid.Row="1"
-        Grid.Column="0"
-        Background="#f8f4ed"
-        IsVisible="False"
-        CornerRadius="0,12,12,0"
-        BorderThickness="0,0,1,0"
-        BorderBrush="#e0e0e0">
-    <StackPanel Spacing="6" Margin="16,20,16,16">
-        <TextBlock Text="Меню" FontSize="18" FontWeight="SemiBold" Foreground="#333" />
-        <Separator Margin="0,4,0,10" />
-
-        <Button Content="Ресурсы"
-                FontSize="16"
-                Background="Transparent"
-                BorderThickness="0"
-                Foreground="#333"
-                HorizontalAlignment="Stretch"
-                Click="ShowResources" />
-
-        <Button Content="Программы"
-                FontSize="16"
-                Background="Transparent"
-                BorderThickness="0"
-                Foreground="#333"
-                HorizontalAlignment="Stretch"
-                Click="ShowPrograms" />
-
-        <Separator Margin="0,10,0,4" />
-
-        <Button Content="Dev Mode"
-                FontSize="14"
-                Background="Transparent"
-                BorderThickness="0"
-                Foreground="#666"
-                HorizontalAlignment="Stretch"
-                Click="ShowDevMode" />
-
-        <Button Content="Назад"
-                FontSize="14"
-                Background="#e0e0e0"
-                BorderBrush="#ccc"
-                BorderThickness="1"
-                CornerRadius="4"
-                Foreground="#333"
-                HorizontalAlignment="Stretch"
-                Click="HideSidebar" />
-    </StackPanel>
+            Grid.Row="1"
+            Grid.Column="0"
+            Background="#f8f4ed"
+            IsVisible="False"
+            CornerRadius="0,12,12,0"
+            BorderThickness="0,0,1,0"
+            BorderBrush="#e0e0e0">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ContentControl x:Name="SidebarContent" />
+    </ScrollViewer>
     </Border>
 
     <!-- === Основной контент (во второй колонке) === -->

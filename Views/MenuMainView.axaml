@@ -1,0 +1,44 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="LibraryApp.Views.MenuMainView">
+  <StackPanel Spacing="12" Margin="16,20,16,16">
+    <TextBlock Text="Меню" FontSize="18" FontWeight="SemiBold" Foreground="#333" />
+    <Separator Margin="0,4,0,10" />
+
+    <Button Content="Ресурсы"
+            FontSize="16"
+            Background="Transparent"
+            BorderThickness="0"
+            Foreground="#333"
+            HorizontalAlignment="Stretch"
+            Click="OnShowResources" />
+
+    <Button Content="Программы"
+            FontSize="16"
+            Background="Transparent"
+            BorderThickness="0"
+            Foreground="#333"
+            HorizontalAlignment="Stretch"
+            Click="OnShowPrograms" />
+
+    <Separator Margin="0,10,0,4" />
+
+    <Button Content="Dev Mode"
+            FontSize="14"
+            Background="Transparent"
+            BorderThickness="0"
+            Foreground="#666"
+            HorizontalAlignment="Stretch"
+            Click="OnShowDevMode" />
+
+    <Button Content="Назад"
+            FontSize="14"
+            Background="#e0e0e0"
+            BorderBrush="#ccc"
+            BorderThickness="1"
+            CornerRadius="4"
+            Foreground="#333"
+            HorizontalAlignment="Stretch"
+            Click="OnGoBack" />
+  </StackPanel>
+</UserControl>

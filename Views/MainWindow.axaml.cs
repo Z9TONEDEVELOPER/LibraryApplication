@@ -24,8 +24,9 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 {
     private AppConfig _config = new();
     public AppConfig Config => _config;
-    public event PropertyChangedEventHandler? PropertyChanged;
+    public new event PropertyChangedEventHandler? PropertyChanged;
     private bool _isSidebarOpen = false;
+    private object? _currentSidebarView;
     private void OnPropertyChanged(string propertyName)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
@@ -167,35 +168,70 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
     }
 
-    private void ToggleSidebar(object sender, RoutedEventArgs e)
+    public void ShowMainMenu()
     {
-        SidebarWidth = SidebarWidth == 0 ? 200 : 0;
-        Sidebar.IsVisible = SidebarWidth > 0;
+        SidebarContent.Content = new MenuMainView(this);
     }
 
-    private void HideSidebar(object sender, RoutedEventArgs e)
+    public void ShowResourcesMenu()
+    {
+        var filtered = _config.Resources
+            .Where(r => r.Category == _config.AppSettings.CurrentMode)
+            .ToList();
+        
+        SidebarContent.Content = new MenuResourcesView(filtered, this);
+    }
+
+    public void ShowProgramsMenu()
+    {
+        var programs = GetCurrentPrograms();
+        SidebarContent.Content = new MenuProgramsView(programs, this);
+    }
+
+    private List<ProgramItem> GetCurrentPrograms()
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            _config.AllowedPrograms.TryGetValue("Windows", out var list);
+            return list ?? new List<ProgramItem>();
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+            _config.AllowedPrograms.TryGetValue("Linux", out var list);
+            return list ?? new List<ProgramItem>();
+        }
+        else if (OperatingSystem.IsMacOS())
+        {
+            _config.AllowedPrograms.TryGetValue("macOS", out var list);
+            return list ?? new List<ProgramItem>();
+        }
+        return new List<ProgramItem>();
+    }
+    private void ToggleSidebar(object sender, RoutedEventArgs e)
+    {
+        SidebarWidth = SidebarWidth == 0 ? 280 : 0;
+        Sidebar.IsVisible = SidebarWidth > 0;
+        
+        if (Sidebar.IsVisible && SidebarContent.Content == null)
+        {
+            ShowMainMenu(); // При первом открытии — главное меню
+        }
+    }
+
+    private void ShowMainMenuButtonClick(object sender, RoutedEventArgs e) => ShowMainMenu();
+
+    public void HideSidebar(object sender, RoutedEventArgs e)
     {
         SidebarWidth = 0;
         Sidebar.IsVisible = false;
     }
-    private void ShowDevMode(object sender, RoutedEventArgs e)
-    {
-        // Пока просто выводим сообщение
-        Console.WriteLine("[DEBUG] Открыт Dev Mode");
-        Sidebar.IsVisible = false;
-    }
 
-    private void ShowResources(object sender, RoutedEventArgs e)
+    public void ShowDevMode(object sender, RoutedEventArgs e)
     {
-        // Пока просто выведем сообщение
-        Console.WriteLine("[DEBUG] Показываем ресурсы");
-        Sidebar.IsVisible = false;
-    }
-
-    private void ShowPrograms(object sender, RoutedEventArgs e)
-    {
-        // Пока просто выведем сообщение
-        Console.WriteLine("[DEBUG] Показываем программы");
-        Sidebar.IsVisible = false;
+        // Пока просто показываем информацию
+        MessageBoxManager.GetMessageBoxStandard(
+            "Dev Mode",
+            $"Режим: {_config.AppSettings.CurrentMode}\nВерсия: 1.0"
+        ).ShowAsync();
     }
 }
